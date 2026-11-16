@@ -1,0 +1,22 @@
+REWEAR + SUPABASE - MABILIS NA GABAY
+====================================
+
+1. Gumawa ng project sa supabase.com (Region: Southeast Asia / Singapore).
+   I-save ang database password.
+
+2. Sa Supabase: SQL Editor > New query.
+   Buksan ang "rewear-supabase-setup.sql", kopyahin ang LAHAT, i-paste, i-click ang Run.
+   Tingnan sa Table Editor: dapat may "products" table na may 26 rows.
+
+3. Kunin ang Project URL at Publishable key (Connect button o Project Settings > API Keys).
+
+4. Buksan ang "supabase-config.js" at palitan ang dalawang linya ng sarili mong URL at key.
+   HUWAG gamitin ang secret/service_role key.
+
+5. Authentication > Email provider: siguraduhing naka-enable.
+   Habang nagte-test, puwedeng i-off ang "Confirm email".
+
+6. Patakbuhin ang website gamit ang Live Server (VS Code extension).
+   Huwag i-double-click ang index.html (hindi gagana ang login sa file://).
+
+Kung may error: pindutin ang F12 > Console, at kopyahin ang pulang error.

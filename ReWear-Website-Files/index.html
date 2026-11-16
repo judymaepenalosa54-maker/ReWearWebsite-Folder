@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReWear | Fashion with a Second Life</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <a href="#home" class="logo">ReWear<span>.</span></a>
+  <button class="menu-toggle" id="menuToggle">☰</button>
+
+  <nav id="mainNav">
+    <a href="#home">Home</a>
+    <a href="#shop">Shop</a>
+    <a href="#impact">Eco Impact</a>
+    <a href="#rewards">Rewards</a>
+    <a href="#sell">Sell</a>
+    <a href="#swap">Swap</a>
+    <a href="#donate">Donate</a>
+    <a href="#wishlist">Wishlist</a>
+  </nav>
+
+  <button class="cart-button" id="cartButton">
+    Cart (<span id="cartCount">0</span>)
+  </button>
+  <div class="account-actions">
+    <button class="account-button" id="accountButton" type="button">Log in</button>
+    <button class="account-button signup-button" id="signupButton" type="button">Sign up</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <p class="eyebrow">FASHION WITH A PURPOSE</p>
+      <h1>Wear More.<br>Waste Less.</h1>
+      <p>Discover pre-loved fashion, share what you no longer need, and help create a more sustainable future.</p>
+      <a href="#shop" class="primary-button">Explore Collection</a>
+    </div>
+    <div class="hero-image-wrap">
+      <img class="hero-image" src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&amp;fit=crop&amp;w=1200&amp;q=85" alt="Friends browsing second-hand clothes together">
+    </div>
+  </section>
+
+  <section class="section" id="shop">
+    <div class="section-heading">
+      <p class="eyebrow">SECOND-HAND, FIRST CHOICE</p>
+      <h2>Explore Pre-Loved Fashion</h2>
+      <p>Find something new to you while helping reduce clothing waste.</p>
+    </div>
+
+    <div class="shop-controls">
+      <input type="search" id="searchInput" placeholder="Search clothes...">
+      <select id="categoryFilter">
+        <option value="all">All Categories</option>
+        <option value="tops">Tops</option>
+        <option value="bottoms">Bottoms</option>
+        <option value="dresses">Dresses</option>
+        <option value="outerwear">Outerwear</option>
+        <option value="accessories">Accessories</option>
+      </select>
+    </div>
+
+    <div class="product-grid" id="productGrid"></div>
+    <p class="empty-message" id="emptyMessage" hidden>No items found.</p>
+  </section>
+
+  <section class="section impact-section" id="impact">
+    <div class="section-heading">
+      <p class="eyebrow">SMALL ACTIONS, BIG IMPACT</p>
+      <h2>Our Eco Impact</h2>
+      <p>Every reused, swapped, or donated item helps give clothing another life.</p>
+    </div>
+
+    <div class="stats-grid">
+      <article class="stat-card">
+        <span class="stat-icon">♻</span>
+        <h3 id="impactSales">0</h3>
+        <p>Items Listed for Sale</p>
+      </article>
+      <article class="stat-card">
+        <span class="stat-icon">↔</span>
+        <h3 id="impactSwaps">0</h3>
+        <p>Swap Requests</p>
+      </article>
+      <article class="stat-card">
+        <span class="stat-icon">♡</span>
+        <h3 id="impactDonations">0</h3>
+        <p>Donations Submitted</p>
+      </article>
+      <article class="stat-card">
+        <span class="stat-icon">🌱</span>
+        <h3 id="impactTotal">0</h3>
+        <p>Community Actions</p>
+      </article>
+    </div>
+    <p class="impact-note">These numbers count actions submitted in this browser demo. They are not measured environmental savings.</p>
+  </section>
+
+  <section class="section rewards-section" id="rewards">
+    <div class="section-heading">
+      <p class="eyebrow">GET REWARDED FOR DOING GOOD</p>
+      <h2>ReWear Rewards</h2>
+      <p>Earn points by taking part in sustainable fashion activities.</p>
+    </div>
+
+    <div class="rewards-panel">
+      <div>
+        <p class="eyebrow">YOUR ECO POINTS</p>
+        <h3><span id="rewardPoints">0</span> Points</h3>
+        <p id="rewardMessage">Start participating to earn your first points!</p>
+      </div>
+      <div class="reward-progress">
+        <div class="progress-track">
+          <div class="progress-fill" id="rewardProgress"></div>
+        </div>
+        <p id="nextReward">100 points to your next badge</p>
+      </div>
+    </div>
+
+    <div class="badge-grid">
+      <article class="badge-card" id="badgeBeginner">
+        <div class="badge-symbol">🌱</div>
+        <h3>Eco Beginner</h3>
+        <p>Earn 10 points</p>
+        <span class="badge-status">Locked</span>
+      </article>
+      <article class="badge-card" id="badgeLover">
+        <div class="badge-symbol">♻</div>
+        <h3>Green Fashion Lover</h3>
+        <p>Earn 50 points</p>
+        <span class="badge-status">Locked</span>
+      </article>
+      <article class="badge-card" id="badgeHero">
+        <div class="badge-symbol">🏆</div>
+        <h3>Sustainability Hero</h3>
+        <p>Earn 100 points</p>
+        <span class="badge-status">Locked</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="section feature-section" id="sell">
+    <div class="section-heading">
+      <p class="eyebrow">MAKE SPACE IN YOUR CLOSET</p>
+      <h2>Sell Your Clothes</h2>
+      <p>Turn clothes you no longer use into something valuable.</p>
+    </div>
+
+    <form class="feature-form" id="sellForm">
+      <label for="itemName">Item name</label>
+      <input id="itemName" type="text" placeholder="Example: White T-shirt" required>
+
+      <label for="itemCategory">Category</label>
+      <select id="itemCategory" required>
+        <option value="">Choose a category</option>
+        <option value="tops">Tops</option>
+        <option value="bottoms">Bottoms</option>
+        <option value="dresses">Dresses</option>
+        <option value="outerwear">Outerwear</option>
+        <option value="accessories">Accessories</option>
+      </select>
+
+      <label for="itemPrice">Price (₱)</label>
+      <input id="itemPrice" type="number" min="1" placeholder="Enter price" required>
+
+      <label for="sellPhoto">Upload item photo</label>
+      <input class="photo-input" id="sellPhoto" type="file" accept="image/png,image/jpeg,image/webp" required>
+      <div class="photo-preview" id="sellPreview">Your photo preview will appear here.</div>
+
+      <label for="sellContact">Contact information</label>
+      <input id="sellContact" type="text" placeholder="Email or phone number" required>
+
+      <button class="primary-button" type="submit">Submit Item for Sale</button>
+      <p class="form-message" id="sellMessage" aria-live="polite"></p>
+    </form>
+
+    <div class="submitted-section">
+      <h3>Your Listed Items</h3>
+      <div class="request-grid" id="sellItems"></div>
+    </div>
+  </section>
+
+  <section class="section feature-section" id="swap">
+    <div class="section-heading">
+      <p class="eyebrow">TRADE WITH THE COMMUNITY</p>
+      <h2>Swap Your Clothes</h2>
+      <p>Exchange clothes you no longer need for something you will love.</p>
+    </div>
+
+    <form class="feature-form" id="swapForm">
+      <label for="swapName">Your name</label>
+      <input id="swapName" type="text" placeholder="Enter your name" required>
+
+      <label for="swapItem">Item you want to swap</label>
+      <input id="swapItem" type="text" placeholder="Example: Denim jacket" required>
+
+      <label for="swapWant">What would you like in exchange?</label>
+      <input id="swapWant" type="text" placeholder="Example: Shoes or a shirt" required>
+
+      <label for="swapCondition">Item condition</label>
+      <select id="swapCondition" required>
+        <option value="">Select condition</option>
+        <option>Brand New</option>
+        <option>Like New</option>
+        <option>Good</option>
+        <option>Fair</option>
+      </select>
+
+      <label for="swapPhoto">Upload your item photo</label>
+      <input class="photo-input" id="swapPhoto" type="file" accept="image/png,image/jpeg,image/webp" required>
+      <div class="photo-preview" id="swapPreview">Your photo preview will appear here.</div>
+
+      <label for="swapContact">Contact information</label>
+      <input id="swapContact" type="text" placeholder="Email or phone number" required>
+
+      <label for="swapMessage">Additional details (optional)</label>
+      <textarea id="swapMessage" rows="3" placeholder="Tell us more about your item..."></textarea>
+
+      <button class="primary-button" type="submit">Submit Swap Request</button>
+      <p class="form-message" id="swapMessageStatus" aria-live="polite"></p>
+    </form>
+
+    <div class="submitted-section">
+      <h3>Community Swap Requests</h3>
+      <div class="request-grid" id="swapRequests"></div>
+    </div>
+  </section>
+
+  <section class="section feature-section donate-section" id="donate">
+    <div class="section-heading">
+      <p class="eyebrow">SHARE WHAT YOU HAVE</p>
+      <h2>Donate Your Clothes</h2>
+      <p>Give usable clothes to people who need them.</p>
+    </div>
+
+    <form class="feature-form" id="donateForm">
+      <label for="donateName">Your name</label>
+      <input id="donateName" type="text" placeholder="Enter your name" required>
+
+      <label for="donateItem">Item you want to donate</label>
+      <input id="donateItem" type="text" placeholder="Example: Children's clothes" required>
+
+      <label for="donateQuantity">Quantity</label>
+      <input id="donateQuantity" type="number" min="1" placeholder="Number of items" required>
+
+      <label for="donateCondition">Item condition</label>
+      <select id="donateCondition" required>
+        <option value="">Select condition</option>
+        <option>Brand New</option>
+        <option>Like New</option>
+        <option>Good</option>
+        <option>Fair</option>
+      </select>
+
+      <label for="donatePhoto">Upload your donation photo</label>
+      <input class="photo-input" id="donatePhoto" type="file" accept="image/png,image/jpeg,image/webp" required>
+      <div class="photo-preview" id="donatePreview">Your photo preview will appear here.</div>
+
+      <label for="donateMethod">Preferred donation method</label>
+      <select id="donateMethod" required>
+        <option value="">Choose a method</option>
+        <option>Meet-up / Drop-off</option>
+        <option>Arrange a pickup</option>
+      </select>
+
+      <label for="donateContact">Contact information</label>
+      <input id="donateContact" type="text" placeholder="Email or phone number" required>
+
+      <label for="donateMessage">Additional details (optional)</label>
+      <textarea id="donateMessage" rows="3" placeholder="Add any important details..."></textarea>
+
+      <button class="primary-button" type="submit">Submit Donation</button>
+      <p class="form-message" id="donateMessageStatus" aria-live="polite"></p>
+    </form>
+
+    <div class="submitted-section">
+      <h3>Community Donations</h3>
+      <div class="request-grid" id="donationRequests"></div>
+    </div>
+  </section>
+
+  <section class="section wishlist-section" id="wishlist">
+    <div class="section-heading">
+      <p class="eyebrow">SAVE YOUR FAVORITES</p>
+      <h2>My Wishlist ♡</h2>
+      <p>Your favorite pre-loved finds in one place.</p>
+    </div>
+    <div class="product-grid" id="wishlistGrid"></div>
+    <p class="empty-message" id="wishlistEmpty">You haven't saved any favorites yet.</p>
+  </section>
+
+  <section class="newsletter">
+    <h2>Stay in the ReWear Community</h2>
+    <p>Get updates about sustainable fashion and new pre-loved items.</p>
+    <form id="newsletterForm">
+      <input type="email" id="newsletterEmail" placeholder="Enter your email" required>
+      <button type="submit">Subscribe</button>
+    </form>
+    <p id="newsletterMessage" class="form-message" aria-live="polite"></p>
+  </section>
+</main>
+
+<footer>
+  <a href="#home" class="logo">ReWear<span>.</span></a>
+  <p>Give clothes a second life. Make fashion more sustainable.</p>
+  <p>© <span id="year"></span> ReWear. All rights reserved.</p>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<dialog id="cartDialog">
+  <div class="modal-header">
+    <h2>Your Shopping Cart</h2>
+    <button id="closeCart" class="close-button">×</button>
+  </div>
+  <div id="cartItems"></div>
+  <h3>Total: ₱<span id="cartTotal">0</span></h3>
+  <button id="checkoutButton" class="primary-button">Checkout</button>
+  <p id="checkoutMessage" class="form-message"></p>
+  <form id="checkoutForm" class="modal-form checkout-form" hidden>
+    <h3>Delivery and Payment</h3>
+    <label for="deliveryAddress">Delivery address</label>
+    <textarea id="deliveryAddress" rows="3" placeholder="House number, street, city, and postal code" required></textarea>
+    <label for="paymentMethod">Type of payment</label>
+    <select id="paymentMethod" required>
+      <option value="">Choose a payment method</option>
+      <option>Cash on Delivery</option>
+      <option>GCash</option>
+      <option>Credit or Debit Card</option>
+      <option>Bank Transfer</option>
+    </select>
+    <button type="submit" class="primary-button">Place Order</button>
+  </form>
+</dialog>
+
+<dialog id="accountDialog">
+  <div class="modal-header">
+    <h2 id="accountTitle">Welcome to ReWear</h2>
+    <button class="close-button" id="closeAccount" type="button" aria-label="Close">×</button>
+  </div>
+  <p class="account-note">Create an account or log in to this browser demo.</p>
+  <div class="auth-tabs" role="tablist" aria-label="Account options">
+    <button type="button" class="auth-tab active" id="showLogin">Log in</button>
+    <button type="button" class="auth-tab" id="showSignup">Sign up</button>
+  </div>
+  <form id="accountForm" class="modal-form">
+    <label for="accountName" id="accountNameLabel" hidden>Your name</label>
+    <input id="accountName" type="text" placeholder="Your name" autocomplete="name" hidden>
+    <label for="accountEmail">Email</label>
+    <input id="accountEmail" type="email" placeholder="you@example.com" autocomplete="email" required>
+    <label for="accountPassword">Password</label>
+    <input id="accountPassword" type="password" placeholder="At least 8 characters" minlength="8" autocomplete="current-password" required>
+    <label for="accountConfirm" id="accountConfirmLabel" hidden>Confirm password</label>
+    <input id="accountConfirm" type="password" placeholder="Re-enter your password" autocomplete="new-password" hidden>
+    <button class="primary-button" id="accountSubmit" type="submit">Log in</button>
+    <p id="accountMessage" class="form-message" aria-live="polite"></p>
+  </form>
+  <p class="account-note">Demo only: accounts stay in this browser. Use a sample password, not one you use elsewhere.</p>
+</dialog>
+
+<dialog id="reviewDialog">
+  <div class="modal-header">
+    <h2>Ratings and Reviews</h2>
+    <button class="close-button" id="closeReview">×</button>
+  </div>
+  <p id="reviewProductName"></p>
+  <form id="reviewForm" class="modal-form">
+    <input type="hidden" id="reviewProductId">
+    <label for="reviewRating">Your rating</label>
+    <select id="reviewRating" required>
+      <option value="">Choose a rating</option>
+      <option value="5">★★★★★ - Excellent</option>
+      <option value="4">★★★★ - Very Good</option>
+      <option value="3">★★★ - Good</option>
+      <option value="2">★★ - Fair</option>
+      <option value="1">★ - Poor</option>
+    </select>
+    <label for="reviewText">Your review</label>
+    <textarea id="reviewText" rows="3" placeholder="Share your experience..." required></textarea>
+    <button class="primary-button" type="submit">Submit Review</button>
+  </form>
+  <div id="reviewList" class="review-list"></div>
+</dialog>
+
+<dialog id="chatDialog">
+  <div class="modal-header">
+    <div>
+      <h2>Chat with Seller</h2>
+      <p id="chatSellerName" class="chat-subtitle">ReWear Seller</p>
+    </div>
+    <button class="close-button" id="closeChat">×</button>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <div class="chat-bubble seller-bubble">Hello! Thanks for your interest. How can I help you?</div>
+  </div>
+  <form id="chatForm" class="chat-form">
+    <input id="chatInput" type="text" placeholder="Write a message..." required>
+    <button type="submit" class="primary-button">Send</button>
+  </form>
+  <p class="chat-note">Demo chat: messages are only shown in this browser session.</p>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

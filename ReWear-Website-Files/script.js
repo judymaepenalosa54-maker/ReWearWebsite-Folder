@@ -96,17 +96,10 @@ function updateAccountButton() {
   $("signupButton").hidden = Boolean(currentUser);
 }
 
-function clearUploadedItems() {
-  ["sellItems", "swapRequests", "donationRequests"].forEach(id => {
-    $(id).replaceChildren();
-  });
-}
-
 $("accountButton").addEventListener("click", async () => {
   if (currentUser) {
     await db.auth.signOut();
-    clearUploadedItems();
-    showToast("Logged out. Your submitted items were cleared.");
+    showToast("Logged out.");
     return;
   }
 

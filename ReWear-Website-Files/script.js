@@ -445,19 +445,40 @@ $("checkoutButton").addEventListener("click", () => {
   $("checkoutForm").hidden = false;
 });
 
-$("checkoutForm").addEventListener("submit", event => {
+// Checkout now saves the order to the Supabase "orders" table
+$("checkoutForm").addEventListener("submit", async event => {
   event.preventDefault();
   if (!requireLogin("place an order")) return;
+
   const address = $("deliveryAddress").value.trim();
   const paymentMethod = $("paymentMethod").value;
   if (!address || !paymentMethod || cart.length === 0) return;
 
+  const form = event.target;
+
+  const { data: { user } } = await db.auth.getUser();
+  const total = cart.reduce((sum, item) => sum + Number(item.price || 0), 0);
+
+  const { error } = await db.from("orders").insert({
+    user_id: user.id,
+    user_email: user.email,
+    items: cart,
+    total,
+    address,
+    payment_method: paymentMethod
+  });
+
+  if (error) {
+    $("checkoutMessage").textContent = "Could not place order: " + error.message;
+    return;
+  }
+
   $("checkoutMessage").textContent =
-    `Demo order placed! Delivery to ${address}. Payment: ${paymentMethod}.`;
+    `Order placed! Delivery to ${address}. Payment: ${paymentMethod}.`;
   cart = [];
   updateCart();
-  event.target.reset();
-  event.target.hidden = true;
+  form.reset();
+  form.hidden = true;
 });
 
 function openReviews(product) {

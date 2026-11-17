@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ReWear Admin - Orders</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; margin: 0; background: #f4f4f4; color: #111; }
+    header { background: #111; color: #fff; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+    header h1 { margin: 0; font-size: 20px; }
+    main { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
+    .card { background: #fff; border-radius: 10px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+    #loginBox { max-width: 380px; margin: 60px auto; }
+    label { display: block; margin: 12px 0 4px; font-weight: bold; font-size: 14px; }
+    input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+    button { padding: 10px 16px; border: 0; border-radius: 6px; background: #111; color: #fff; cursor: pointer; font-size: 14px; }
+    button.secondary { background: #fff; color: #111; border: 1px solid #ccc; }
+    #loginBox button { width: 100%; margin-top: 16px; }
+    .message { margin-top: 12px; color: #b00020; font-size: 14px; }
+    .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px; flex-wrap: wrap; }
+    .summary { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+    .summary .card { flex: 1; min-width: 160px; text-align: center; }
+    .summary strong { display: block; font-size: 24px; margin-top: 4px; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; background: #fff; }
+    th, td { text-align: left; padding: 10px; border-bottom: 1px solid #eee; vertical-align: top; }
+    th { background: #fafafa; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ReWear Admin</h1>
+    <button id="logoutButton" class="secondary" hidden>Log out</button>
+  </header>
+
+  <main>
+    <section id="loginBox" class="card">
+      <h2>Admin Log in</h2>
+      <form id="loginForm">
+        <label for="email">Email</label>
+        <input id="email" type="email" required autocomplete="username">
+        <label for="password">Password</label>
+        <input id="password" type="password" required autocomplete="current-password">
+        <button type="submit">Log in</button>
+        <p id="loginMessage" class="message"></p>
+      </form>
+    </section>
+
+    <section id="ordersSection" hidden>
+      <div class="summary">
+        <div class="card">Total orders<strong id="totalOrders">0</strong></div>
+        <div class="card">Total sales (PHP)<strong id="totalSales">0</strong></div>
+      </div>
+
+      <div class="card">
+        <div class="toolbar">
+          <h2 style="margin:0">All Orders</h2>
+          <button id="refreshButton">Refresh</button>
+        </div>
+        <p id="ordersMessage" class="message"></p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Customer</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Address</th>
+                <th>Payment</th>
+              </tr>
+            </thead>
+            <tbody id="ordersBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script>
+    // Put the admin account's email here (same email used in the Supabase SQL policy)
+    const ADMIN_EMAIL = "rewear.admin@gmail.com";
+
+    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const $ = id => document.getElementById(id);
+
+    function showLogin(message) {
+      $("loginBox").hidden = false;
+      $("ordersSection").hidden = true;
+      $("logoutButton").hidden = true;
+      $("loginMessage").textContent = message || "";
+    }
+
+    function showOrdersPage() {
+      $("loginBox").hidden = true;
+      $("ordersSection").hidden = false;
+      $("logoutButton").hidden = false;
+      loadOrders();
+    }
+
+    async function loadOrders() {
+      $("ordersMessage").textContent = "";
+      const { data, error } = await db
+        .from("orders")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        $("ordersMessage").textContent = "Could not load orders: " + error.message;
+        return;
+      }
+
+      const body = $("ordersBody");
+      body.innerHTML = "";
+      let sales = 0;
+
+      if (data.length === 0) {
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+        cell.colSpan = 6;
+        cell.textContent = "No orders yet.";
+        row.appendChild(cell);
+        body.appendChild(row);
+      }
+
+      data.forEach(order => {
+        sales += Number(order.total || 0);
+
+        const row = document.createElement("tr");
+        const items = Array.isArray(order.items)
+          ? order.items.map(item => `${item.name} (PHP ${item.price})`).join(", ")
+          : "";
+
+        [
+          new Date(order.created_at).toLocaleString(),
+          order.user_email,
+          items,
+          "PHP " + order.total,
+          order.address,
+          order.payment_method
+        ].forEach(value => {
+          const cell = document.createElement("td");
+          cell.textContent = value ?? "";
+          row.appendChild(cell);
+        });
+
+        body.appendChild(row);
+      });
+
+      $("totalOrders").textContent = data.length;
+      $("totalSales").textContent = sales;
+    }
+
+    $("loginForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      const email = $("email").value.trim().toLowerCase();
+      const password = $("password").value;
+
+      const { error } = await db.auth.signInWithPassword({ email, password });
+      if (error) {
+        $("loginMessage").textContent = error.message;
+        return;
+      }
+      event.target.reset();
+    });
+
+    $("logoutButton").addEventListener("click", () => db.auth.signOut());
+    $("refreshButton").addEventListener("click", loadOrders);
+
+    db.auth.onAuthStateChange(async (event, session) => {
+      if (!session) {
+        showLogin();
+        return;
+      }
+
+      if (session.user.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+        await db.auth.signOut();
+        showLogin("This account is not an admin account.");
+        return;
+      }
+
+      showOrdersPage();
+    });
+  </script>
+</body>
+</html>
